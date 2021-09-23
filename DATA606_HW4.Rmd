@@ -1,0 +1,404 @@
+---
+title: "Chapter 4 - Distributions of Random Variables"
+author: ''
+output:
+  html_document:
+    theme: cerulean
+    df_print: paged
+  pdf_document:
+    extra_dependencies:
+    - geometry
+    - multicol
+    - multirow
+---
+
+### Title: CUNY SPS MDS Data606_HW4"
+### Author: Charles Ugiagbe
+### Date: "9/23/2021"
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(fastGraph)
+```
+
+
+```{r}
+library(DATA606)
+```
+
+
+
+**Area under the curve, Part I**. (4.1, p. 142) What percent of a standard normal distribution $N(\mu=0, \sigma=1)$ is found in each region? Be sure to draw a graph.
+
+(a) $Z < -1.35$
+(b) $Z > 1.48$
+(c) $-0.4 < Z < 1.5$
+(d) $|Z| > 2$
+
+```{r, echo=FALSE}
+# use the DATA606::normalPlot function to create a plot or the pnorm function for the actual values.
+```
+
+##        Solutions 1: (Area under curve)
+
+For a standard normal distribution, N(μ=0,σ=1) and x = Z * sd + mu
+
+(a) $Z < -1.35$
+
+```{r}
+pnorm(-1.35)
+```
+
+```{r}
+shadeDist(-1.35)
+```
+
+(b) $Z > 1.48$
+
+
+```{r}
+#P(Z > 1.48) = 1 - P(Z<1.48)
+
+1 - pnorm(1.48)
+```
+
+```{r}
+shadeDist(1.48, lower.tail = FALSE)
+```
+
+(c) $-0.4 < Z < 1.5$
+
+```{r}
+# P(−0.4<Z<1.5) = P(Z<1.5) - P(Z<-0.4)
+pnorm(1.5) - pnorm(-0.4)
+```
+
+```{r}
+shadeDist(c(-0.4,1.5), lower.tail = FALSE)
+```
+
+(d) $|Z| > 2$
+
+  $P(|Z|>2) = P(Z < -2 or Z > 2) = P(Z< -2) + P(Z > 2)$
+  
+  $P(Z< -2) + ( 1 - P(Z < 2))$
+
+
+```{r}
+pnorm(-2) + 1 - pnorm(2)
+```
+
+```{r}
+shadeDist(c(-2,2))
+```
+
+
+
+
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+**Triathlon times, Part I** (4.4, p. 142) In triathlons, it is common for racers to be placed into age and gender groups. Friends Leo and Mary both completed the Hermosa Beach Triathlon, where Leo competed in the *Men, Ages 30 - 34* group while Mary competed in the *Women, Ages 25 - 29* group. Leo completed the race in 1:22:28 (4948 seconds), while Mary completed the race in 1:31:53 (5513 seconds). Obviously Leo finished faster, but they are curious about how they did within their respective groups. Can you help them? Here is some information on the performance of their groups:
+
+* The finishing times of the \textit{Men, Ages 30 - 34} group has a mean of 4313 seconds with a standard deviation of 583 seconds.
+* The finishing times of the \textit{Women, Ages 25 - 29} group has a mean of 5261 seconds with a standard deviation of 807 seconds.
+* The distributions of finishing times for both groups are approximately Normal.
+
+Remember: a better performance corresponds to a faster finish.
+
+(a) Write down the short-hand for these two normal distributions.
+(b) What are the Z-scores for Leo's and Mary's finishing times? What do these Z-scores tell you?
+(c) Did Leo or Mary rank better in their respective groups? Explain your reasoning.
+(d) What percent of the triathletes did Leo finish faster than in his group?
+(e) What percent of the triathletes did Mary finish faster than in her group?
+(f) If the distributions of finishing times are not nearly normal, would your answers to parts (b) - (e) change? Explain your reasoning.
+
+
+##            Solution 2: (Triathlon times)
+
+**(a) short-hand for the two normal Distribution**
+
+For Men (Age 30-34 Group): $N(µ = 4313, σ = 583)$
+
+For Women (Age 25-29 Group): $N(µ = 5261, σ = 807)$
+
+
+**(b)  Z-scores for Leo's and Mary's finishing times**
+
+  z - scores: $z = x−μ/σ$
+  
+  For leo, x = 4948
+  
+  Leo Z-score = (4948 - 4313)/583 = 1.09
+  
+  
+  For mary, x = 5513
+  
+  Mary Z-score = (5513 - 5261)/807 = 0.31
+
+*Leo is 1.09 standard deviations slower than the mean for his men group. Mary is 0.31 standard deviations slower than the mean for her women group.*
+
+
+**(c) Leo's and Mary's rank in their respective group**
+
+```{r}
+# To calculate Leo Percentile, x = 4948
+pnorm(4948, mean = 4313, sd=583)
+```
+Leo: Percentile = 0.8620 = 86.20%
+
+
+```{r}
+# To calculate Mary's Percentile, x = 5513
+pnorm(5513, mean = 5261, sd=807)
+```
+Mary: Percentile = 0.6226 = 62.26%
+
+Leo did better than Mary in their respective group since he is in the 86.2 percentile of his age group while Mary is in the 62.26 percentile of her age group.
+
+
+**(d)** Leo finish more than 86.20% of the triathletes
+
+**(e)** Mary finish more than 62.26% of the triathletes
+
+**(f)**  If the distribution of the finishing time are not nearly normal, the answers to b - e will be different because the z-score calculated is with the assumption of a near normal distribution. If the normal distribution is skewed, then the z-score will also be skewed.
+
+
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+**Heights of female college students** Below are heights of 25 female college students.
+
+\[ \stackrel{1}{54}, \stackrel{2}{55}, \stackrel{3}{56}, \stackrel{4}{56}, 
+\stackrel{5}{57}, \stackrel{6}{58}, \stackrel{7}{58}, \stackrel{8}{59}, 
+\stackrel{9}{60}, \stackrel{10}{60}, \stackrel{11}{60}, \stackrel{12}{61}, 
+\stackrel{13}{61}, \stackrel{14}{62}, \stackrel{15}{62}, \stackrel{16}{63}, 
+\stackrel{17}{63}, \stackrel{18}{63}, \stackrel{19}{64}, \stackrel{20}{65}, 
+\stackrel{21}{65}, \stackrel{22}{67}, \stackrel{23}{67}, \stackrel{24}{69}, 
+\stackrel{25}{73} \]
+
+(a) The mean height is 61.52 inches with a standard deviation of 4.58 inches. Use this information to determine if the heights approximately follow the 68-95-99.7% Rule.
+(b) Do these data appear to follow a normal distribution? Explain your reasoning using the graphs provided below.
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.show="hold", out.width="50%", fig.height=3}
+library(openintro)
+heights <- c(54, 55, 56, 56, 57, 58, 58, 59, 60, 60, 60, 61, 
+            61, 62, 62, 63, 63, 63, 64, 65, 65, 67, 67, 69, 73)
+par(mar=c(3.7,2.2,1,1), las=1, mgp=c(2.5,0.7,0), mfrow = c(1,1), cex.lab = 1.5, cex.axis = 1.5)
+histPlot(heights, col = COL[1], xlab = "Heights", ylab = "", probability = TRUE, axes = FALSE, ylim = c(0,0.085))
+axis(1)
+x <- heights
+xfit <- seq(min(x)-5, max(x)+5, length = 400)
+yfit <- dnorm(xfit, mean = mean(x), sd = sd(x))
+lines(xfit, yfit, col = COL[4], lwd = 2)
+par(mar=c(3.7,3.7,1,1), las=1, mgp=c(2.5,0.7,0), mfrow = c(1,1), cex.lab = 1.5, cex.axis = 1.5)
+qqnorm(heights, col = COL[1], pch = 19, main = "", axes = FALSE)
+axis(1)
+axis(2)
+qqline(heights, col = COL[1])
+```
+
+```{r}
+# Use the DATA606::qqnormsim function
+```
+
+
+
+##        Solution 3: (Heights of female college students)
+
+
+To determine if it follows the 68-95-99.7% Rule, we check each of the categories:
+
+
+```{r}
+length(heights)
+```
+
+```{r}
+mean_height <- mean(heights) # 61.52
+sd_height <- sd(heights)  # 4.583667
+mean_height
+```
+```{r}
+sd_height
+```
+
+```{r}
+#mean_height + sd_height #66.10367
+#mean_height - sd_height #56.93633
+#mean_height + 2*sd_height #70.68733
+#mean_height - 2*sd_height # 52.35267
+#mean_height + 3*sd_height # 75.271
+#mean_height - 3*sd_height # 47.769
+
+within_1sd <- heights[which(heights < mean_height + sd_height & heights > mean_height - sd_height)]
+within_2sd <- heights[which(heights < mean_height + 2*sd_height & heights > mean_height - 2*sd_height)]
+within_3sd <- heights[which(heights < mean_height + 3*sd_height & heights > mean_height - 3*sd_height)]
+
+```
+
+68% rule: 68 percent of the data should fall within 1 standard deviation of the mean.
+
+```{r}
+length(within_1sd)/length(heights)
+```
+95% rule: 95 percent of the data should fall within 2 standard deviations of the mean.
+
+```{r}
+length(within_2sd)/length(heights)
+```
+99.7% rule: 99.7 percent of the data should fall within 3 standard deviations of the mean.
+
+```{r}
+length(within_3sd)/length(heights)
+```
+
+```{r}
+qqnormsim(heights)
+```
+
+**(b)** Yes, the data seem to follow the normal distribution. the histogram does not look perfectly symmetric, but the the Bell curve shows a good approximation of a normal distribution. Also, the quantiles plot is close to a line, which is a condition also for a normal distribution. So, we can say, that the distribution is nearly normal.
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+**Defective rate.** (4.14, p. 148) A machine that produces a special type of transistor (a component of computers) has a 2% defective rate. The production is considered a random process where each transistor is independent of the others.
+
+(a) What is the probability that the 10th transistor produced is the first with a defect?
+(b) What is the probability that the machine produces no defective transistors in a batch of 100?
+(c) On average, how many transistors would you expect to be produced before the first with a defect? What is the standard deviation?
+(d) Another machine that also produces transistors has a 5% defective rate where each transistor
+is produced independent of the others. On average how many transistors would you expect to be produced with this machine before the first with a defect? What is the standard deviation?
+(e) Based on your answers to parts (c) and (d), how does increasing the probability of an event affect the mean and standard deviation of the wait time until success?
+
+
+
+##        Solutions 4: (Defective rate)
+
+Transistor has 2% defective rate.that is 2/100 = 0.02
+
+(a)   Probability that the 10th transistor produced is the first with a defect.
+
+```{r}
+P <- (1-.02)^(10-1)*0.02
+P
+```
+
+(b) Probability of no defects in a batch of 100
+
+```{r}
+A <- (1-.02)^100
+A
+```
+
+**(c)**
+Transitor produced before first defect
+
+```{r}
+# expected value = EV = 1/p
+EV <- 1/0.02
+EV
+```
+ To calculate the Standard Deviation
+ 
+```{r}
+# sd = sqrt((1-p))/p*p)
+sd <- sqrt((1-.02)/(.02*.02))
+sd
+```
+
+**(d)** 
+
+Another Machine with 5% defective rate.
+
+```{r}
+# expected value = ev = 1/p
+ev <- 1/.05
+ev
+```
+Standard Deviation of Machine with 5% defective
+
+```{r}
+# sd = sqrt((1-p))/p*p)
+sd <- sqrt((1-.05)/(.05*.05))
+sd
+```
+
+(e)   Base on question (c) and (d), As the Probability of defective increases from 0.2 to 0.5, both the mean and the standard deviation decreases; showing an inverse relationship
+
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+**Male children.** While it is often assumed that the probabilities of having a boy or a girl are the same, the actual probability of having a boy is slightly higher at 0.51. Suppose a couple plans to have 3 kids.
+
+(a) Use the binomial model to calculate the probability that two of them will be boys.
+(b) Write out all possible orderings of 3 children, 2 of whom are boys. Use these scenarios to calculate the same probability from part (a) but using the addition rule for disjoint outcomes. Confirm that your answers from parts (a) and (b) match.
+(c) If we wanted to calculate the probability that a couple who plans to have 8 kids will have 3 boys, briefly describe why the approach from part (b) would be more tedious than the approach from part (a).
+
+
+##            Solutions 5: (Male Children)
+
+**(a) probability that two of them will be boys**
+
+```{r}
+p <- dbinom(2, 3, 0.51)
+p
+```
+
+**(b) Possibilities of 2 boys from 3 Children**
+
+```{r}
+# p = P(gbb) + P(bbg) + P(bgb)
+p <- (0.49 * 0.51 * 0.51) + (0.51 * 0.51 * 0.49) + (0.51 * 0.49 * 0.51)
+p
+```
+
+**(c) It will be tedious to calculate the probability of a couple having 3 boys from 8 children using method (b) because there will be (83C=56) possible way in which this could occur. This will involve us calculating 56 possible probability.**
+However, if we are to use method (a), it is quite easy; since it just need one line of code to get the result as shown below.**
+
+```{r}
+p_3boys <- dbinom(3, 8, 0.51)
+p_3boys
+```
+
+--------------------------------------------------------------------------------
+
+\clearpage
+
+**Serving in volleyball.** (4.30, p. 162) A not-so-skilled volleyball player has a 15% chance of making the serve, which involves hitting the ball so it passes over the net on a trajectory such that it will land in the opposing team's court. Suppose that her serves are independent of each other.
+
+(a) What is the probability that on the 10th try she will make her 3rd successful serve?
+(b) Suppose she has made two successful serves in nine attempts. What is the probability that her 10th serve will be successful?
+(c) Even though parts (a) and (b) discuss the same scenario, the probabilities you calculated should be different. Can you explain the reason for this discrepancy?
+
+
+##            Solutions 6: (Serving in Volleyball)
+
+**(a) Probability of 3rd success on the 10th serve**
+
+Probability is 0.0389
+
+```{r}
+p_ms <- .15
+n <- 10
+k <- 3
+p <- choose(n-1, k-1) * (1-p_ms)^(n-k)*p_ms^k
+p
+```
+
+(b) The probability that her 10th serve will be successful is still 0.15. This is because the serves are independent of each other. so the probability of a successful serve is 0.15
+
+
+(c) Solution (a) is dealing with a join probability, while (b) is dealing with a single independent trial (the probability that her 10th trail will be suceessful).
